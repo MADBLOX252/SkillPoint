@@ -1,20 +1,20 @@
-import React, { useEffect } from 'react';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import Lenis from 'lenis';
-import 'lenis/dist/lenis.css';
-import { CustomCursor } from './components/CustomCursor';
-import { Navbar } from './components/Navbar';
-import { Hero, About, Features, LearningPath, CTA } from './components/HomeSections';
-import { SubjectExplorer } from './components/SubjectExplorer';
-import { NotesPage } from './components/NotesPage';
+import { useEffect, html } from './lib/preact.js';
+import { Router, Route, Switch } from 'https://esm.sh/wouter@3/preact';
+import { useHashLocation } from 'https://esm.sh/wouter@3/preact/use-hash-location';
+import Lenis from 'https://esm.sh/lenis';
+import { CustomCursor } from './components/CustomCursor.js';
+import { Navbar } from './components/Navbar.js';
+import { Hero, About, Features, LearningPath, CTA } from './components/HomeSections.js';
+import { SubjectExplorer } from './components/SubjectExplorer.js';
+import { NotesPage } from './components/NotesPage.js';
 
-const HomePage = () => (
+const HomePage = () => html`
   <main>
-    <Hero />
-    <About />
-    <Features />
-    <LearningPath />
-    <CTA />
+    <${Hero} />
+    <${About} />
+    <${Features} />
+    <${LearningPath} />
+    <${CTA} />
     <footer className="py-20 px-6 border-t border-white/5 text-center">
       <div className="text-4xl font-bold tracking-tighter mb-4">
         <span className="text-white">Skill</span>
@@ -23,7 +23,7 @@ const HomePage = () => (
       <p className="text-white/40 text-sm">Empowering students to succeed, together.</p>
     </footer>
   </main>
-);
+`;
 
 export default function App() {
   useEffect(() => {
@@ -50,19 +50,19 @@ export default function App() {
     };
   }, []);
 
-  return (
-    <Router>
+  return html`
+    <${Router} hook=${useHashLocation}>
       <div className="min-h-screen bg-brand-bg selection:bg-brand-accent selection:text-black">
-        <CustomCursor />
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/subjects" element={<SubjectExplorer />} />
-          <Route path="/subjects/:subjectId" element={<SubjectExplorer />} />
-          <Route path="/subjects/:subjectId/:section" element={<SubjectExplorer />} />
-          <Route path="/notes/:subjectId/:chapterId/:subChapterId" element={<NotesPage />} />
-        </Routes>
+        <${CustomCursor} />
+        <${Navbar} />
+        <${Switch}>
+          <${Route} path="/" component=${HomePage} />
+          <${Route} path="/subjects" component=${SubjectExplorer} />
+          <${Route} path="/subjects/:subjectId" component=${SubjectExplorer} />
+          <${Route} path="/subjects/:subjectId/:section" component=${SubjectExplorer} />
+          <${Route} path="/notes/:subjectId/:chapterId/:subChapterId" component=${NotesPage} />
+        </${Switch}>
       </div>
-    </Router>
-  );
+    </${Router}>
+  `;
 }

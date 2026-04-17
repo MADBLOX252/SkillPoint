@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { motion, useSpring, useMotionValue } from 'motion/react';
+import { useEffect, useState, html } from '../lib/preact.js';
+import { motion, useSpring, useMotionValue } from 'https://esm.sh/framer-motion?alias=react:preact/compat,react-dom:preact/compat';
 import cursorImg from '../../cursor.png';
 
 export const CustomCursor = () => {
@@ -58,10 +58,10 @@ export const CustomCursor = () => {
 
   if (!isVisible && !isHovering) return null;
 
-  return (
+  return html`
     <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
-      <motion.div
-        style={{
+      <${motion.div}
+        style=${{
           left: 0,
           top: 0,
           x: cursorX,
@@ -71,15 +71,15 @@ export const CustomCursor = () => {
         className="absolute"
       >
         <img 
-          src={cursorImg} 
+          src=${cursorImg} 
           alt="Custom Cursor" 
           className="w-8 h-8 object-contain"
-          style={{
+          style=${{
             filter: 'drop-shadow(0 0 2px #0ACF83) drop-shadow(0 0 4px rgba(10, 207, 131, 0.6))'
           }}
           referrerPolicy="no-referrer"
         />
-      </motion.div>
+      </${motion.div}>
     </div>
-  );
+  `;
 };
