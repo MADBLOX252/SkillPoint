@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useSpring, useMotionValue } from 'motion/react';
+import cursorImg from '../../cursor.png';
 
 export const CustomCursor = () => {
   const [isHovering, setIsHovering] = useState(false);
@@ -70,7 +71,7 @@ export const CustomCursor = () => {
         className="absolute"
       >
         <img 
-          src="/cursor.png" 
+          src={cursorImg} 
           alt="Custom Cursor" 
           className="w-8 h-8 object-contain"
           style={{
