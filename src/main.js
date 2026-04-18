@@ -9,7 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initAudio();
 });
 
-window.addEventListener('hashchange', handleRouting);
+window.addEventListener('hashchange', () => {
+  closePreview();
+  handleRouting();
+});
 
 // --- Audio Logic ---
 let buttonSound, exitSound;
@@ -93,6 +96,47 @@ function initScrollNavbar() {
     }
   });
 }
+
+// --- Preview Modal ---
+window.openPreview = (url, title) => {
+  const modal = document.getElementById('preview-modal');
+  const iframe = document.getElementById('preview-iframe');
+  const previewTitle = document.getElementById('preview-title');
+  const previewExternal = document.getElementById('preview-external');
+  const loader = document.getElementById('preview-loader');
+
+  // Convert drive links to preview type if possible
+  let previewUrl = url;
+  if (url.includes('drive.google.com/file/d/')) {
+    previewUrl = url.replace('/view', '/preview').replace('/edit', '/preview');
+  }
+
+  previewTitle.innerText = title;
+  previewExternal.href = url;
+  
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+  
+  // Reset scroll
+  document.body.style.overflow = 'hidden';
+  
+  loader.style.display = 'flex';
+  iframe.src = previewUrl;
+  
+  iframe.onload = () => {
+    loader.style.display = 'none';
+  };
+};
+
+window.closePreview = () => {
+  const modal = document.getElementById('preview-modal');
+  const iframe = document.getElementById('preview-iframe');
+  
+  modal.classList.remove('flex');
+  modal.classList.add('hidden');
+  document.body.style.overflow = '';
+  iframe.src = '';
+};
 
 // --- Routing ---
 function handleRouting() {
@@ -382,8 +426,8 @@ function renderSectionContent(subject, section) {
             </h3>
             <div class="space-y-3">
               ${subject.noteResources.filter(r => r.category === cat).map(res => `
-                <a href="${res.url}" target="_blank"
-                   class="flex items-center justify-between p-5 glass rounded-2xl border border-white/5 hover:border-brand-accent/30 transition-all group">
+                <button onclick="openPreview('${res.url}', '${res.title}')" 
+                   class="w-full flex items-center justify-between p-5 glass rounded-2xl border border-white/5 hover:border-brand-accent/30 transition-all group text-left">
                   <div class="flex items-center gap-5">
                     <div class="w-12 h-12 bg-brand-accent/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                       <i data-lucide="file-text" class="text-brand-accent w-6 h-6"></i>
@@ -394,10 +438,10 @@ function renderSectionContent(subject, section) {
                     </div>
                   </div>
                   <div class="flex items-center gap-3">
-                    <span class="text-xs font-bold text-white/20 group-hover:text-white/40 transition-colors hidden sm:block">View Document</span>
-                    <i data-lucide="external-link" class="w-5 h-5 text-white/20 group-hover:text-brand-accent transition-all group-hover:scale-110"></i>
+                    <span class="text-xs font-bold text-white/20 group-hover:text-white/40 transition-colors hidden sm:block">Preview Document</span>
+                    <i data-lucide="maximize-2" class="w-5 h-5 text-white/20 group-hover:text-brand-accent transition-all group-hover:scale-110"></i>
                   </div>
-                </a>
+                </button>
               `).join('')}
             </div>
           </div>
@@ -407,6 +451,30 @@ function renderSectionContent(subject, section) {
       return html || renderEmptyState('No notes available yet.');
 
     case 'topical':
+      if (subject.topicalQuestions && subject.topicalQuestions.length > 0) {
+        const categories = [...new Set(subject.topicalQuestions.map(r => r.category))];
+        return categories.map(cat => `
+          <div class="mb-16">
+            <h3 class="text-xl font-bold mb-8 flex items-center gap-3 text-white/30 uppercase tracking-widest font-mono">
+              <span class="w-8 h-[1px] bg-white/10"></span> ${cat}
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              ${subject.topicalQuestions.filter(r => r.category === cat).map(res => `
+                <button onclick="openPreview('${res.url}', '${res.title}')" 
+                   class="flex items-center justify-between p-5 bg-white/5 rounded-2xl border border-white/5 hover:border-brand-accent/30 transition-all group text-left">
+                  <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center group-hover:bg-brand-accent/20 transition-colors">
+                      <i data-lucide="help-circle" class="text-brand-accent/60 w-5 h-5 group-hover:text-brand-accent transition-colors"></i>
+                    </div>
+                    <span class="font-bold text-white/80 group-hover:text-white transition-colors">${res.title}</span>
+                  </div>
+                  <i data-lucide="eye" class="w-4 h-4 text-white/20 group-hover:text-brand-accent"></i>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+      }
       return renderEmptyState('Topical questions coming soon.');
 
     case 'textbooks':
@@ -414,8 +482,8 @@ function renderSectionContent(subject, section) {
         return `
           <div class="space-y-4">
             ${subject.textbooks.map(book => `
-              <a href="${book.url}" target="_blank"
-                 class="flex flex-col md:flex-row md:items-center justify-between p-6 glass rounded-2xl border border-white/5 hover:border-brand-accent/30 transition-all group gap-6">
+              <button onclick="openPreview('${book.url}', '${book.title}')" 
+                 class="w-full flex flex-col md:flex-row md:items-center justify-between p-6 glass rounded-2xl border border-white/5 hover:border-brand-accent/30 transition-all group gap-6 text-left">
                 <div class="flex items-center gap-6">
                   <div class="w-14 h-14 bg-brand-accent/10 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform">
                     <i data-lucide="book" class="text-brand-accent w-8 h-8"></i>
@@ -429,9 +497,9 @@ function renderSectionContent(subject, section) {
                   <div class="px-4 py-2 bg-white/5 rounded-full text-xs font-bold text-white/40 group-hover:bg-brand-accent group-hover:text-black transition-all">
                     Open Preview
                   </div>
-                  <i data-lucide="chevron-right" class="w-6 h-6 text-white/20 group-hover:text-brand-accent group-hover:translate-x-1 transition-all"></i>
+                  <i data-lucide="maximize-2" class="w-6 h-6 text-white/20 group-hover:text-brand-accent group-hover:scale-110 transition-all"></i>
                 </div>
-              </a>
+              </button>
             `).join('')}
           </div>
         `;
@@ -439,6 +507,27 @@ function renderSectionContent(subject, section) {
       return renderEmptyState('No textbooks available.');
 
     case 'resources':
+      if (subject.resources && subject.resources.length > 0) {
+        return `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            ${subject.resources.map(res => `
+              <a href="${res.url}" download
+                 class="p-8 glass rounded-3xl border border-white/5 hover:border-brand-accent/30 transition-all group flex items-center justify-between">
+                <div class="flex items-center gap-6">
+                  <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i data-lucide="${res.type === 'xlsx' ? 'table' : 'file'}" class="text-brand-accent w-8 h-8"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-xl font-bold mb-1">${res.title}</h4>
+                    <span class="text-xs text-brand-accent font-mono uppercase tracking-widest">${res.type || 'Resource'} File</span>
+                  </div>
+                </div>
+                <i data-lucide="download" class="w-6 h-6 text-white/20 group-hover:text-brand-accent transition-all"></i>
+              </a>
+            `).join('')}
+          </div>
+        `;
+      }
       return renderEmptyState('Learning resources are being curated.');
 
     default:

@@ -70,7 +70,42 @@
     <!-- App Content Wrapper -->
     <div id="app"></div>
 
-    <!-- Footer (Conditional via JS or just static if it's on all pages) -->
+    <!-- Preview Modal -->
+    <div id="preview-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 md:p-10 pointer-events-none">
+      <div class="absolute inset-0 bg-black/90 backdrop-blur-xl pointer-events-auto" onclick="closePreview()"></div>
+      <div class="relative w-full h-full max-w-6xl glass rounded-[2rem] border border-white/10 overflow-hidden flex flex-col pointer-events-auto shadow-2xl">
+        <div class="p-6 flex items-center justify-between border-b border-white/10 bg-white/5">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-brand-accent/20 rounded-xl flex items-center justify-center text-brand-accent">
+              <i data-lucide="file-text" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3 id="preview-title" class="font-bold text-lg leading-tight">Document Preview</h3>
+              <p class="text-xs text-white/30 uppercase tracking-widest font-mono">SkillPoint Academic Viewer</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <a id="preview-external" href="#" target="_blank" class="flex items-center gap-2 px-5 py-2.5 bg-white text-black rounded-full font-bold text-sm hover:bg-brand-accent transition-colors">
+              <i data-lucide="external-link" class="w-4 h-4"></i> Open in New Tab
+            </a>
+            <button onclick="closePreview()" class="w-10 h-10 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors">
+              <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+          </div>
+        </div>
+        <div class="flex-1 w-full relative bg-white/5">
+          <iframe id="preview-iframe" src="" class="w-full h-full border-none"></iframe>
+          <div id="preview-loader" class="absolute inset-0 flex items-center justify-center bg-brand-bg">
+            <div class="flex flex-col items-center gap-4 text-brand-accent">
+              <div class="w-12 h-12 border-4 border-brand-accent/20 border-t-brand-accent rounded-full animate-spin"></div>
+              <span class="text-xs font-mono uppercase tracking-widest animate-pulse">Loading Document...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
     <footer id="main-footer" class="py-20 px-6 border-t border-white/5 text-center">
       <div class="text-4xl font-bold tracking-tighter mb-4">
         <span class="text-white">Skill</span>
