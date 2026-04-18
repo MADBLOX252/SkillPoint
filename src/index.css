@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono&display=swap');
 
+:root {
+  --color-brand-bg: #0a0a0a;
+  --color-brand-accent: #00ff88;
+}
+
 /* Global Styles */
 body {
   background-color: #0a0a0a;
@@ -15,24 +20,22 @@ body {
 }
 
 .custom-cursor {
-  width: 20px;
-  height: 20px;
-  border: 1px solid var(--color-brand-accent);
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   position: fixed;
   pointer-events: none;
   z-index: 9999;
-  mix-blend-mode: difference;
+  background-image: url('../cursor.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  /* Green outline and glow */
+  filter: drop-shadow(0 0 2px #00ff88) drop-shadow(0 0 5px rgba(0, 255, 136, 0.5));
+  transition: transform 0.2s ease;
 }
 
+/* We don't need the dot anymore if using a dedicated PNG cursor, or we can keep it for precision */
 .custom-cursor-dot {
-  width: 4px;
-  height: 4px;
-  background: var(--color-brand-accent);
-  border-radius: 50%;
-  position: fixed;
-  pointer-events: none;
-  z-index: 10000;
+  display: none;
 }
 
 .glass {

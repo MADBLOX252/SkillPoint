@@ -13,27 +13,24 @@ window.addEventListener('hashchange', handleRouting);
 // --- Cursor Logic ---
 function initCursor() {
   const cursor = document.getElementById('cursor');
-  const dot = document.getElementById('cursor-dot');
   
-  if (!cursor || !dot) return;
+  if (!cursor) return;
+
+  // Offset by 50% of the calculated width (40px) = 20px
+  const offset = 20;
 
   window.addEventListener('mousemove', (e) => {
     gsap.to(cursor, {
-      x: e.clientX,
-      y: e.clientY,
+      x: e.clientX + offset,
+      y: e.clientY + offset,
       duration: 0.5,
       ease: 'power3.out'
-    });
-    gsap.to(dot, {
-      x: e.clientX,
-      y: e.clientY,
-      duration: 0.1
     });
   });
 
   document.querySelectorAll('a, button, [role="button"]').forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('scale-150'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('scale-150'));
+    el.addEventListener('mouseenter', () => cursor.classList.add('scale-125'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('scale-125'));
   });
 }
 
@@ -302,55 +299,68 @@ function renderSubjectExplorer(subjectId, section) {
 function renderSectionContent(subject, section) {
   switch (section) {
     case 'notes':
+      let html = '';
+      
+      // Handle discrete subchapters (IGCSE style)
       if (subject.notes && subject.notes.length > 0) {
-        return `
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            ${subject.notes.map(chapter => `
-              <div class="glass rounded-3xl p-8 border border-white/5">
-                <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
-                  <i data-lucide="folder" class="text-brand-accent w-6 h-6"></i> ${chapter.title}
-                </h3>
-                <div class="space-y-4">
-                  ${chapter.subChapters.map(sub => `
-                    <a href="#/notes/${subject.id}/${chapter.id}/${sub.id}" 
-                       class="group flex items-center justify-between p-4 bg-white/5 rounded-2xl hover:bg-white/10 hover:translate-x-2 transition-all border border-transparent hover:border-white/10">
-                      <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-brand-accent/10 flex items-center justify-center text-brand-accent">
-                          <i data-lucide="file-text" class="w-5 h-5"></i>
-                        </div>
-                        <span class="font-medium text-white/80">${sub.title}</span>
-                      </div>
-                      <i data-lucide="chevron-right" class="w-5 h-5 text-white/20 group-hover:text-brand-accent"></i>
-                    </a>
-                  `).join('')}
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      } else if (subject.noteResources && subject.noteResources.length > 0) {
-        // Render grouped external resources
-        const categories = [...new Set(subject.noteResources.map(r => r.category))];
-        return categories.map(cat => `
-          <div class="mb-12">
-            <h3 class="text-3xl font-bold mb-8 flex items-center gap-3 italic font-serif opacity-50">
-              ${cat}
+        html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
+        html += subject.notes.map(chapter => `
+          <div class="glass rounded-3xl p-8 border border-white/5">
+            <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
+              <i data-lucide="folder" class="text-brand-accent w-6 h-6"></i> ${chapter.title}
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div class="space-y-4">
+              ${chapter.subChapters.map(sub => `
+                <a href="#/notes/${subject.id}/${chapter.id}/${sub.id}" 
+                   class="group flex items-center justify-between p-4 bg-white/5 rounded-2xl hover:bg-white/10 hover:translate-x-2 transition-all border border-transparent hover:border-white/10">
+                  <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-brand-accent/10 flex items-center justify-center text-brand-accent">
+                      <i data-lucide="file-text" class="w-5 h-5"></i>
+                    </div>
+                    <span class="font-medium text-white/80">${sub.title}</span>
+                  </div>
+                  <i data-lucide="chevron-right" class="w-5 h-5 text-white/20 group-hover:text-brand-accent"></i>
+                </a>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+        html += `</div>`;
+      }
+      
+      // Handle resource-based notes (A-Level style)
+      if (subject.noteResources && subject.noteResources.length > 0) {
+        const categories = [...new Set(subject.noteResources.map(r => r.category))];
+        html += categories.map(cat => `
+          <div class="mb-16">
+            <h3 class="text-2xl font-bold mb-8 flex items-center gap-3 text-white/40 uppercase tracking-widest font-mono">
+              <i data-lucide="folder" class="w-5 h-5"></i> ${cat}
+            </h3>
+            <div class="space-y-3">
               ${subject.noteResources.filter(r => r.category === cat).map(res => `
                 <a href="${res.url}" target="_blank"
-                   class="p-6 glass rounded-2xl border border-white/5 hover:border-brand-accent/30 transition-all group">
-                  <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <i data-lucide="download" class="text-brand-accent w-6 h-6"></i>
+                   class="flex items-center justify-between p-5 glass rounded-2xl border border-white/5 hover:border-brand-accent/30 transition-all group">
+                  <div class="flex items-center gap-5">
+                    <div class="w-12 h-12 bg-brand-accent/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <i data-lucide="file-text" class="text-brand-accent w-6 h-6"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-lg text-white/90 group-hover:text-brand-accent transition-colors">${res.title}</h4>
+                      <span class="text-xs text-white/30 uppercase tracking-tighter">${res.type || 'Resource'}</span>
+                    </div>
                   </div>
-                  <h4 class="font-bold text-sm leading-tight">${res.title}</h4>
+                  <div class="flex items-center gap-3">
+                    <span class="text-xs font-bold text-white/20 group-hover:text-white/40 transition-colors hidden sm:block">View Document</span>
+                    <i data-lucide="external-link" class="w-5 h-5 text-white/20 group-hover:text-brand-accent transition-all group-hover:scale-110"></i>
+                  </div>
                 </a>
               `).join('')}
             </div>
           </div>
         `).join('');
       }
-      return renderEmptyState('No notes available yet.');
+      
+      return html || renderEmptyState('No notes available yet.');
 
     case 'topical':
       return renderEmptyState('Topical questions coming soon.');
@@ -358,20 +368,26 @@ function renderSectionContent(subject, section) {
     case 'textbooks':
       if (subject.textbooks && subject.textbooks.length > 0) {
         return `
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="space-y-4">
             ${subject.textbooks.map(book => `
-              <div class="glass rounded-3xl p-8 border border-white/5 group relative overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-br from-brand-accent/5 via-transparent to-transparent"></div>
-                <div class="w-12 h-12 bg-brand-accent/10 rounded-xl flex items-center justify-center mb-8 relative z-10">
-                  <i data-lucide="book" class="text-brand-accent w-6 h-6"></i>
+              <a href="${book.url}" target="_blank"
+                 class="flex flex-col md:flex-row md:items-center justify-between p-6 glass rounded-2xl border border-white/5 hover:border-brand-accent/30 transition-all group gap-6">
+                <div class="flex items-center gap-6">
+                  <div class="w-14 h-14 bg-brand-accent/10 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform">
+                    <i data-lucide="book" class="text-brand-accent w-8 h-8"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-xl font-bold text-white group-hover:text-brand-accent transition-colors">${book.title}</h3>
+                    <p class="text-white/40 text-sm italic font-serif">${book.description || ''}</p>
+                  </div>
                 </div>
-                <h3 class="text-xl font-bold mb-3 relative z-10">${book.title}</h3>
-                <p class="text-white/40 text-sm mb-8 relative z-10">${book.description || ''}</p>
-                <a href="${book.url}" target="_blank"
-                   class="inline-flex items-center gap-2 text-brand-accent font-bold group/btn relative z-10">
-                  Read Textbook <i data-lucide="chevron-right" class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform"></i>
-                </a>
-              </div>
+                <div class="flex items-center gap-4">
+                  <div class="px-4 py-2 bg-white/5 rounded-full text-xs font-bold text-white/40 group-hover:bg-brand-accent group-hover:text-black transition-all">
+                    Open Preview
+                  </div>
+                  <i data-lucide="chevron-right" class="w-6 h-6 text-white/20 group-hover:text-brand-accent group-hover:translate-x-1 transition-all"></i>
+                </div>
+              </a>
             `).join('')}
           </div>
         `;
