@@ -6,23 +6,53 @@ document.addEventListener('DOMContentLoaded', () => {
   initLenis();
   initScrollNavbar();
   handleRouting();
+  initAudio();
 });
 
 window.addEventListener('hashchange', handleRouting);
 
+// --- Audio Logic ---
+let buttonSound, exitSound;
+
+function initAudio() {
+  buttonSound = new Audio('./ButtonClick.mp3');
+  exitSound = new Audio('./ExitButton.mp3');
+
+  document.addEventListener('click', (e) => {
+    const target = e.target.closest('a, button, [role="button"]');
+    if (!target) return;
+
+    // Check if it's a back/exit button
+    const isExit = target.innerText.toLowerCase().includes('back') || 
+                   target.innerText.toLowerCase().includes('exit') ||
+                   target.querySelector('[data-lucide="arrow-left"]');
+    
+    if (isExit) {
+      exitSound.currentTime = 0;
+      exitSound.play().catch(() => {});
+    } else {
+      buttonSound.currentTime = 0;
+      buttonSound.play().catch(() => {});
+    }
+  });
+}
+
 // --- Cursor Logic ---
 function initCursor() {
   const cursor = document.getElementById('cursor');
-  
   if (!cursor) return;
 
-  // Offset by 50% of the calculated width (40px) = 20px
-  const offset = 20;
-
+  // Center the image (50% right/down offset)
+  // Since cursor is 40x40, we want it shifted.
+  // Actually, the user said "Offset it right by 50% and down by 50%".
+  // If the cursor is 40px, 50% is 20px. 
+  
   window.addEventListener('mousemove', (e) => {
     gsap.to(cursor, {
-      x: e.clientX + offset,
-      y: e.clientY + offset,
+      x: e.clientX,
+      y: e.clientY,
+      xPercent: 0,
+      yPercent: 0,
       duration: 0.5,
       ease: 'power3.out'
     });
@@ -211,6 +241,13 @@ function renderHome() {
 
 function renderSubjects() {
   const app = document.getElementById('app');
+  
+  // Separate subjects by category
+  const categories = {
+    'IGCSE': SUBJECTS_LIST.filter(s => s.category === 'IGCSE'),
+    'A-Level': SUBJECTS_LIST.filter(s => s.category === 'A-Level')
+  };
+
   app.innerHTML = `
     <div class="min-h-screen pt-32 pb-20 px-6">
       <div class="max-w-7xl mx-auto">
@@ -219,26 +256,33 @@ function renderSubjects() {
           <h1 class="text-6xl font-bold tracking-tighter">Subject <span class="text-gradient">Explorer</span></h1>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          ${SUBJECTS_LIST.map((subject, index) => `
-            <a href="#/subjects/${subject.id}" 
-               class="group p-8 glass rounded-3xl border border-white/5 hover:border-brand-accent/50 transition-all duration-500 relative overflow-hidden">
-              <div class="absolute top-0 right-0 w-32 h-32 bg-brand-accent/5 blur-3xl group-hover:bg-brand-accent/10 transition-all"></div>
-              
-              <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-12 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 border border-white/10">
-                <i data-lucide="${subject.icon}" class="text-brand-accent w-8 h-8"></i>
-              </div>
+        ${Object.keys(categories).map(cat => `
+          <div class="mb-20">
+            <h2 class="text-3xl font-bold mb-10 flex items-center gap-4 text-white/40 italic font-serif">
+              <span class="w-12 h-[1px] bg-white/10"></span> ${cat}
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              ${categories[cat].map(subject => `
+                <a href="#/subjects/${subject.id}" 
+                   class="group p-8 glass rounded-3xl border border-white/5 hover:border-brand-accent/50 transition-all duration-500 relative overflow-hidden">
+                  <div class="absolute top-0 right-0 w-32 h-32 bg-brand-accent/5 blur-3xl group-hover:bg-brand-accent/10 transition-all"></div>
+                  
+                  <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-12 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 border border-white/10">
+                    <i data-lucide="${subject.icon}" class="text-brand-accent w-8 h-8"></i>
+                  </div>
 
-              <div>
-                <span class="text-xs font-mono text-brand-accent/60 uppercase tracking-widest mb-2 block">${subject.category} • ${subject.code}</span>
-                <h3 class="text-3xl font-bold mb-4">${subject.title}</h3>
-                <div class="flex items-center gap-2 text-white/30 text-sm font-medium">
-                  Explore Resources <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-2 transition-transform"></i>
-                </div>
-              </div>
-            </a>
-          `).join('')}
-        </div>
+                  <div>
+                    <span class="text-xs font-mono text-brand-accent/60 uppercase tracking-widest mb-2 block">${subject.category} • ${subject.code}</span>
+                    <h3 class="text-3xl font-bold mb-4">${subject.title}</h3>
+                    <div class="flex items-center gap-2 text-white/30 text-sm font-medium">
+                      Explore Resources <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                  </div>
+                </a>
+              `).join('')}
+            </div>
+          </div>
+        `).join('')}
       </div>
     </div>
   `;
