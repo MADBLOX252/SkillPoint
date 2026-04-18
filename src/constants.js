@@ -3,26 +3,15 @@ export const PHYSICS_IGCSE = {
   title: 'Physics',
   code: '0625 / 0972',
   category: 'IGCSE',
-  notes: [
-    {
-      id: 'forces',
-      title: 'Forces & Motion',
-      subChapters: [
-        {
-          id: 'speed-velocity-acceleration',
-          title: 'Speed, Velocity & Acceleration',
-          downloadUrl: '#',
-          content: [
-            { type: 'heading', content: 'Understanding Motion' },
-            { type: 'text', content: 'Speed is the distance travelled per unit time. Velocity is speed in a given direction.' },
-            { type: 'image', url: 'https://picsum.photos/seed/physics1/800/400', caption: 'Motion diagrams' }
-          ]
-        }
-      ]
-    }
+  notes: [],
+  noteResources: [
+    { title: 'IGCSE Physics - ASTRA', url: 'https://drive.google.com/file/d/1aA0t80qPJTR2tr6-hNONx8lUwFfk6mqp/view?usp=drive_link', category: 'Revision Notes' },
+    { title: 'IGCSE Physics - CattaStudies', url: 'https://drive.google.com/file/d/1h0RGoEsGqiajfZ3wLypY5KiQVcGiUXKN/view?usp=drive_link', category: 'Revision Notes' }
   ],
   topicalQuestions: [],
-  textbooks: [],
+  textbooks: [
+    { title: 'The Perfect Answer Revision Guide (2023+)', description: 'SwH Learning iihosc', url: 'https://drive.google.com/file/d/1RfQHQmlWUVjFmyW9n6QRLbSCa5Qr29id/view?usp=drive_link' }
+  ],
   resources: []
 };
 
@@ -86,9 +75,7 @@ export const PHYSICS_AL = {
     { title: 'Practical Workbook (2020)', description: 'Jones, Field, Hewlett, Styles', url: 'https://drive.google.com/file/d/158jb9ggB_9BAilHVnsSQdAEfLiduQiqP/view?usp=sharing', type: 'pdf' },
     { title: 'Physics Textbook 101', description: 'Reference Book', url: 'https://drive.google.com/file/d/1bzg-LlSgL3cvhfhrHe4IM8M-fZ_Qfw2S/view?usp=sharing', type: 'pdf' }
   ],
-  resources: [
-     { title: 'Physics Spreadsheet', url: '#', type: 'xlsx' },
-  ]
+  resources: []
 };
 
 export const CHEMISTRY_AL = {
@@ -171,9 +158,7 @@ export const CHEMISTRY_AL = {
     { title: 'Exam Success in Chemistry AS-AL', description: 'Revision Guide', url: 'https://drive.google.com/file/d/1mDGmJqm83Zs-5WDWQ1HAbQFedrJ9ORIt/view?usp=drivesdk' },
     { title: 'Chemistry in Context', description: 'AS-AL Reference', url: 'https://drive.google.com/file/d/1txzwR2sk3Nzrw3WB-58aSS8MXLSrhv4M/view?usp=drivesdk' },
   ],
-  resources: [
-     { title: 'Chemistry Spreadsheet', url: '#', type: 'xlsx' },
-  ]
+  resources: []
 };
 
 export const BIOLOGY_AL = {
@@ -226,17 +211,15 @@ export const BIOLOGY_AL = {
     { title: 'Study & Revision Guide', description: 'Mary Jones', url: 'https://drive.google.com/file/d/1oHYJeqyYd5HCTsZhMbckxiWXF9m5oRhs/view?usp=drivesdk' },
     { title: 'Exam Success in Biology AS-AL', description: 'Revision Guide', url: 'https://drive.google.com/file/d/1_tzWBPg_58nA_h3wCQhSzlQ4TPv-V99d/view?usp=drivesdk' },
   ],
-  resources: [
-     { title: 'Biology Spreadsheet', url: '#', type: 'xlsx' },
-  ]
+  resources: []
 };
 
-export const MATH_IGCSE = { id: 'math-igcse', title: 'Mathematics', code: '0580 & 0980', category: 'IGCSE', notes: [], topicalQuestions: [], textbooks: [], resources: [{ title: 'Math Spreadsheet', url: '#', type: 'xlsx' }] };
-export const BIOLOGY_IGCSE = { id: 'biology-igcse', title: 'Biology', code: '0610 & 0970', category: 'IGCSE', notes: [], topicalQuestions: [], textbooks: [], resources: [{ title: 'Biology Spreadsheet', url: '#', type: 'xlsx' }] };
-export const CHEMISTRY_IGCSE = { id: 'chemistry-igcse', title: 'Chemistry', code: '0610 & 0971', category: 'IGCSE', notes: [], topicalQuestions: [], textbooks: [], resources: [{ title: 'Chemistry Spreadsheet', url: '#', type: 'xlsx' }] };
-export const ICT_IGCSE = { id: 'ict-igcse', title: 'ICT', code: '0417', category: 'IGCSE', notes: [], topicalQuestions: [], textbooks: [], resources: [{ title: 'ICT Spreadsheet', url: '#', type: 'xlsx' }] };
-export const IT_AL = { id: 'it-al', title: 'IT', code: '9626', category: 'A-Level', notes: [], topicalQuestions: [], textbooks: [], resources: [{ title: 'IT Spreadsheet', url: '#', type: 'xlsx' }] };
-export const MATH_AL = { id: 'math-al', title: 'Mathematics', code: '9709', category: 'A-Level', notes: [], topicalQuestions: [], textbooks: [], resources: [{ title: 'Math Spreadsheet', url: '#', type: 'xlsx' }] };
+export const MATH_IGCSE = { id: 'math-igcse', title: 'Mathematics', code: '0580 & 0980', category: 'IGCSE', notes: [], topicalQuestions: [], textbooks: [], resources: [] };
+export const BIOLOGY_IGCSE = { id: 'biology-igcse', title: 'Biology', code: '0610 & 0970', category: 'IGCSE', notes: [], noteResources: [{ title: 'IGCSE Biology - ASTRA', url: 'https://drive.google.com/file/d/1NqXYoz-GX_2YFJ9meuGQJg2JpPv-6G7e/view?usp=drive_link', category: 'Revision Notes' }, { title: 'IGCSE Biology - CattaStudies', url: 'https://drive.google.com/file/d/1dUJC57ierZk1cInE9iuykYf7CwrcMEVv/view?usp=drive_link', category: 'Revision Notes' }], topicalQuestions: [], textbooks: [], resources: [] };
+export const CHEMISTRY_IGCSE = { id: 'chemistry-igcse', title: 'Chemistry', code: '0610 & 0971', category: 'IGCSE', notes: [], noteResources: [{ title: 'IGCSE Chemistry - ASTRA', url: 'https://drive.google.com/file/d/1QgvgXVn4XFp1e3vXwMS_gCEVv-kf-j_h/view?usp=drive_link', category: 'Revision Notes' }, { title: 'IGCSE Chemistry - CattaStudies', url: 'https://drive.google.com/file/d/1JumJECHH0LZKjMukLceUHLxVu1OWMWzZ/view?usp=drive_link', category: 'Revision Notes' }], topicalQuestions: [], textbooks: [], resources: [] };
+export const ICT_IGCSE = { id: 'ict-igcse', title: 'ICT', code: '0417', category: 'IGCSE', notes: [], topicalQuestions: [], textbooks: [], resources: [] };
+export const IT_AL = { id: 'it-al', title: 'IT', code: '9626', category: 'A-Level', notes: [], topicalQuestions: [], textbooks: [], resources: [] };
+export const MATH_AL = { id: 'math-al', title: 'Mathematics', code: '9709', category: 'A-Level', notes: [], topicalQuestions: [], textbooks: [], resources: [] };
 
 export const CURRICULUM_DATA = {
   'physics-igcse': PHYSICS_IGCSE,

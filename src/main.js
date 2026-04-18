@@ -2,7 +2,6 @@ import { CURRICULUM_DATA, SUBJECTS_LIST } from './constants.js';
 
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
-  initCursor();
   initLenis();
   initScrollNavbar();
   handleRouting();
@@ -18,8 +17,8 @@ window.addEventListener('hashchange', () => {
 let buttonSound, exitSound;
 
 function initAudio() {
-  buttonSound = new Audio('./ButtonClick.mp3');
-  exitSound = new Audio('./ExitButton.mp3');
+  buttonSound = new Audio('./SFX/CLICK.mp3');
+  exitSound = new Audio('./SFX/EXIT.mp3');
 
   document.addEventListener('click', (e) => {
     const target = e.target.closest('a, button, [role="button"]');
@@ -37,33 +36,6 @@ function initAudio() {
       buttonSound.currentTime = 0;
       buttonSound.play().catch(() => {});
     }
-  });
-}
-
-// --- Cursor Logic ---
-function initCursor() {
-  const cursor = document.getElementById('cursor');
-  if (!cursor) return;
-
-  // Center the image (50% right/down offset)
-  // Since cursor is 40x40, we want it shifted.
-  // Actually, the user said "Offset it right by 50% and down by 50%".
-  // If the cursor is 40px, 50% is 20px. 
-  
-  window.addEventListener('mousemove', (e) => {
-    gsap.to(cursor, {
-      x: e.clientX,
-      y: e.clientY,
-      xPercent: 0,
-      yPercent: 0,
-      duration: 0.5,
-      ease: 'power3.out'
-    });
-  });
-
-  document.querySelectorAll('a, button, [role="button"]').forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('scale-125'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('scale-125'));
   });
 }
 
@@ -198,13 +170,15 @@ function renderHome() {
           <span class="text-xs font-medium uppercase tracking-widest text-white/60">The Future of Education is Here</span>
         </div>
         
-        <h1 class="text-7xl md:text-9xl font-bold tracking-tighter mb-8 leading-[0.85]">
-          LEARN<br/>
-          <span class="text-gradient">FASTER</span>
+        <h1 class="text-5xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-8 leading-tight">
+          SKILL<span class="text-gradient">POINT</span>
         </h1>
         
-        <p class="max-w-2xl mx-auto text-xl text-white/40 mb-12 leading-relaxed">
-          The all-in-one hub for IGCSE & A-Level mastery. High-yield notes, topical practice, and expert resources—redefined.
+        <p class="max-w-2xl mx-auto text-xl text-white/40 mb-4 leading-relaxed">
+          A private repository for high-yield IGCSE & A-Level notes and academic resources.
+        </p>
+        <p class="text-xs font-mono text-brand-accent/40 mb-12">
+          Note: This is a private repository and is not to be shared ;)
         </p>
         
         <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
@@ -239,7 +213,7 @@ function renderHome() {
           <span class="text-brand-accent font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Our Philosophy</span>
           <h2 class="text-5xl font-bold mb-8 tracking-tight">Active Learning, <br/>Passive <span class="text-gradient">Distraction.</span></h2>
           <p class="text-xl text-white/50 mb-12 leading-relaxed">
-            Standard textbooks are designed for bulk—not efficiency. SkillPoint distills complex syllabi into actionable knowledge through high-contrast visual cues and structured hierarchies.
+            SkillPoint is a curated repository for notes designed for maximum extraction. We distill complex syllabi into actionable knowledge through a private, high-contrast visual architecture.
           </p>
           
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-12">
